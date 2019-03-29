@@ -1,0 +1,189 @@
+<div [style.display]="showBasicForm ? 'block' : 'none'">
+  <div class="d-flex justify-content-center">
+    <section class="card" style="min-width: 35%;">
+        <div class="card-body">
+          <div class="card-title">Employee detailsForm</div>
+          <form [formGroup]="detailsForm" (ngSubmit)="saveEmployeeDetails()">
+            <div class="form-group">
+              <label for="firstName">First Name</label>
+              <input class="form-control" id="firstName" type="text" formControlName="firstName">
+              <div *ngIf="detailsForm.get('firstName')?.hasError('required') && detailsForm.get('firstName')?.touched">
+                Please enter first name
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="lastName">Last Name</label>
+              <input class="form-control" id="lastName" type="text" formControlName="lastName">
+              <div *ngIf="detailsForm.get('lastName')?.hasError('required') && detailsForm.get('lastName')?.touched">
+                Please enter last name
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="middleInitial">Middle Initial</label>
+              <input class="form-control" id="middleInitial" type="text" formControlName="middleInitial">
+              <div *ngIf="detailsForm.get('middleInitial')?.hasError('maxlength') && detailsForm.get('middleInitial')?.touched">
+                Only 1 character please
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="position"> Position: </label>
+              <input class="form-control" id="position" type="text" formControlName="position">
+              <div *ngIf="detailsForm.get('position')?.hasError('minlength') && detailsForm.get('position')?.touched">
+                Position is too short
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="department"> Department: </label>
+              <select id="department" formControlName="department">
+                <option value="">Select...</option>
+                <option *ngFor="let dep of departments" [value]="dep">{{dep}}</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="immediateSupervisor"> Supervisor: </label>
+              <input class="form-control" id="immediateSupervisor" type="text" formControlName="immediateSupervisor">
+            </div>
+            <div class="form-group">
+              <label for="phone"> Phone: </label>
+              <input class="form-control" id="phone" type="tel" formControlName="phoneNumber" [class.invalid]="detailsForm.get('phoneNumber')?.invalid">
+            </div>
+            <div class="form-group">
+              <label for="email"> Email: </label>
+              <input class="form-control" id="email" type="email" formControlName="email">
+            </div>
+            <button class="btn btn-primary" [disabled]="!detailsForm.valid" [class.disabled]="!detailsForm.valid">Save</button>
+          </form>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-body">
+          <div class="card-title">Form Data</div>
+
+          Form Value Object:
+          <pre>{{ detailsForm.value | json }}</pre> Form Validity:
+          <div>{{ detailsForm.valid }}</div>
+
+          <button class="btn" (click)="logTheForm()">Log Form Object</button>
+        </div>
+      </section>
+  </div>
+</div>
+
+<div [style.display]="showPartForm  ? 'block' : 'none'">
+  <div class="d-flex justify-content-center">
+    <section class="card" style="min-width: 35%;">
+        <div class="card-body">
+            <div class="card-title">Inventory Id Search Form</div>
+            <form class="bg-light border p-3" [formGroup]="inventorySearchForm" (ngSubmit)="searchForInventoryItemId()">
+              <div class="form-group">
+                <label for="organizationId1">Organization Id<span class="text-danger">*</span></label>
+                <input class="form-control" id="organizationId1" type="text" formControlName="organizationId">
+                <div *ngIf="inventorySearchForm.get('organizationId')?.hasError('required') && inventorySearchForm.get('organizationId')?.touched">
+                  <span class="text-danger">Organization Id Is Required!</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="partNumber">Part Number <span class="text-danger">*</span></label>
+                <input class="form-control" id="partNumber" type="text" formControlName="partNumber">
+                <div *ngIf="inventorySearchForm.get('partNumber')?.hasError('required') && inventorySearchForm.get('partNumber')?.touched">
+                  <span class="text-danger">Part Number is Required!</span>
+                </div>
+              </div>
+              <button class="btn btn-primary"
+                      [disabled]="!inventorySearchForm.valid"
+                      [class.disabled]="!inventorySearchForm.valid">
+                  Get Inventory Item Id
+              </button>
+            </form>
+        </div>
+        <div class="card-body">
+          <div class="card-title">Part Search Form</div>
+          <form class="bg-light border p-3" [formGroup]="partSearchForm" (ngSubmit)="searchForPartNumber()">
+            <div class="form-group">
+              <label for="organizationId">Organization Id<span class="text-danger">*</span></label>
+              <input [class.disabled]="!isPartSearchFormEnabled" class="form-control" id="organizationId" type="text" formControlName="organizationId">
+              <div *ngIf="partSearchForm.get('organizationId')?.hasError('required') && partSearchForm.get('organizationId')?.touched">
+                <span class="text-danger">Organization Id Is Required!</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inventoryItemId">Inventory Item Id <span class="text-danger">*</span></label>
+              <input [class.disabled]="!isPartSearchFormEnabled" class="form-control" id="inventoryItemId" type="text" formControlName="inventoryItemId">
+              <div *ngIf="partSearchForm.get('inventoryItemId')?.hasError('required') && partSearchForm.get('inventoryItemId')?.touched">
+                <span class="text-danger">Inventory Item Id Id Is Required!</span>
+              </div>
+            </div>
+
+            <button class="btn btn-primary" [disabled]="!partSearchForm.valid" [class.disabled]="!partSearchForm.valid">Get Parent Parts</button>
+          </form>
+        </div>
+    </section>
+
+    <div class="d-flex flex-column">
+      <section class="card">
+          <div class="card-body">
+            <div class="card-title">Inventory Search Form</div>
+
+            Form Value Object:
+            <pre>{{ inventorySearchForm.value | json }}</pre> Form Validity:
+            <div>{{ inventorySearchForm.valid }}</div>
+
+            <button class="btn" (click)="logTheForm()">Log Form Object</button>
+          </div>
+      </section>
+
+      <section class="card">
+          <div class="card-body">
+            <div class="card-title">Part Search Form</div>
+
+            Form Value Object:
+            <pre>{{ partSearchForm.value | json }}</pre> Form Validity:
+            <div>{{ partSearchForm.valid }}</div>
+
+            <button class="btn" (click)="logTheForm()">Log Form Object</button>
+          </div>
+      </section>
+
+      <div *ngIf="parentParts" class="my-1" style="max-height: 100px">
+          <div class="custom-container">
+            <table class="table row-border hover table-bordered mx-auto">
+              <thead>
+                <tr>
+                  <th class="sticky-top bg-white">Part Number</th>
+                  <th class="sticky-top bg-white" style="white-space: nowrap;">QTY To Stage</th>
+                  <th class="sticky-top bg-white" style="width: 100%;">QTY Staged</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let row of parentParts">
+                  <tr>
+                    <td style="white-space: nowrap;">
+                        {{ row.PartNumber }}
+                    </td>
+                    <td>{{ row.Description }}</td>
+                    <td>{{ row.InventoryItemId }}</td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="bottom-left-fixed">
+  <div class="d-flex flex-column align-items-center">
+    <div class="card-body">
+      <div class="card-title">Example Forms</div>
+      <div>
+        <button (click)="onShowBasicForm()" class="btn btn-outline-primary w-100">Basic Form</button>
+      </div>
+      <div>
+        <button (click)="onShowPartForm()" class="btn btn-outline-primary w-100">Part Form</button>
+      </div>
+    </div>
+  </div>
+</div>
