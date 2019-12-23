@@ -17,7 +17,7 @@ export class AppComponent {
     'Payroll'
   ];
 
-  apolloUrl = 'https://pitapp.altec.com/PIT/v1';
+  webApiUrl = '';
 
   showBasicForm = true;
   showPartForm = false;
@@ -57,7 +57,7 @@ export class AppComponent {
     const organizationId = this.inventorySearchForm.controls.organizationId.value;
     const partNumber = this.inventorySearchForm.controls.partNumber.value;
 
-    this.httpClient.get<any>(this.apolloUrl + `/PartInfo/InventoryItemIdFromPartNumber/${organizationId}/${partNumber}`)
+    this.httpClient.get<any>(this.webApiUrl + `${organizationId}/${partNumber}`)
     .subscribe(
       data => {
         this.isPartSearchFormEnabled = true;
@@ -76,7 +76,7 @@ export class AppComponent {
     const organizationId = this.partSearchForm.controls.organizationId.value;
     const inventoryItemId = this.partSearchForm.controls.inventoryItemId.value;
 
-    this.httpClient.get<any>(this.apolloUrl + `/PartInfo/GetParentPartsInformation/${organizationId}/${inventoryItemId}`)
+    this.httpClient.get<any>(this.webApiUrl + `/PartInfo/GetParentPartsInformation/${organizationId}/${inventoryItemId}`)
     .subscribe(
       data => this.parentParts = data,
       (error => alert(`There was an error getting the parent parts information: ${error}`))
